@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyctolumiphilia & Albalumiphobia</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --text-dark: #e0e0e0;
+            --accent-dark: #ffffff;
+
+            --bg-light: #f5f5f5;
+            --text-light: #1a1a1a;
+            --accent-light: #000000;
+
+            --transition-speed: 0.8s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important; /* Hide real cursor */
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        body.light-mode {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        /* Fluid Background Spotlight Effect */
+        #spotlight-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+            filter: blur(20px); /* Make it fluid */
+        }
+
+        main {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .definitions {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+            animation: fadeIn var(--transition-speed) ease-out;
+        }
+
+        .definitions.hidden {
+            display: none;
+        }
+
+        .word-entry {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        .word-entry:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .word {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .word::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: currentColor;
+            transition: width 0.5s ease;
+        }
+
+        .word-entry:hover .word::after {
+            width: 100%;
+        }
+
+        .phonetic {
+            font-family: serif;
+            font-style: italic;
+            opacity: 0.7;
+            margin-bottom: 0.2rem;
+        }
+
+        .pronunciation {
+            font-size: 0.9rem;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+
+        .part-of-speech {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .meanings {
+            list-style: none;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .meanings li {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .meanings li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            opacity: 0.5;
+        }
+
+        /* Custom Cursor */
+        #cursor {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%); /* Center it */
+            mix-blend-mode: difference;
+        }
+
+        #cursor-glow {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%); /* Center it */
+            transition: transform 0.15s ease-out;
+            box-shadow: 0 0 15px currentColor;
+            opacity: 0.5;
+            mix-blend-mode: difference;
+        }
+
+        /* Light Switch */
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            z-index: 100;
+        }
+
+        .switch {
+            width: 70px;
+            height: 36px;
+            background: rgba(128, 128, 128, 0.2);
+            border-radius: 18px;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            cursor: pointer !important;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .switch:hover {
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .switch-toggle {
+            width: 20px;
+            height: 20px;
+            background: currentColor;
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .dark-mode .switch-toggle {
+            transform: translateX(0);
+        }
+
+        .light-mode .switch-toggle {
+            transform: translateX(34px);
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 600px) {
+            .word { font-size: 2rem; }
+            .meanings { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <canvas id="spotlight-canvas"></canvas>
+    <div id="cursor"></div>
+    <div id="cursor-glow"></div>
+
+    <main>
+        <section id="dark-definitions" class="definitions">
+            <div class="word-entry">
+                <h1 class="word">Nyc·to·lu·mi·phil·i·a</h1>
+                <p class="phonetic">/ˌnɪktoʊˌluːmiˈfɪliə/</p>
+                <p class="pronunciation">(nik-toh-loo-mee-FIL-ee-uh)</p>
+                <p class="part-of-speech">noun</p>
+                <ol class="meanings">
+                    <li>A strong preference or "love" for dark mode; the state of finding comfort, focus, or aesthetic satisfaction in dark-themed digital interfaces.</li>
+                    <li>The habit of immediately enabling "dark theme" on every new app or website encountered.</li>
+                </ol>
+            </div>
+
+            <div class="word-entry">
+                <h1 class="word">Al·ba·lu·mi·pho·bi·a</h1>
+                <p class="phonetic">/ˌælbəˌluːmiˈfoʊbiə/</p>
+                <p class="pronunciation">(al-bə-loo-mee-FOH-bee-uh)</p>
+                <p class="part-of-speech">noun</p>
+                <ol class="meanings">
+                    <li>An intense aversion to or "fear" of light mode on digital screens, or bright digital screens; the physical discomfort caused by high-contrast white backgrounds and extreme display brightness.</li>
+                    <li>The immediate urge to switch a device to dark mode upon encountering a bright user interface.</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="light-definitions" class="definitions hidden">
+            <div class="word-entry">
+                <h1 class="word">Al·ba·lu·mi·phil·i·a</h1>
+                <p class="phonetic">/ˌælbəˌluːmiˈfɪliə/</p>
+                <p class="pronunciation">(al-bə-loo-mee-FIL-ee-uh)</p>
+                <p class="part-of-speech">noun</p>
+                <ol class="meanings">
+                    <li>A strong preference for "light mode" on digital devices.</li>
+                    <li>The enjoyment of high-brightness, white-background interfaces, often citing better clarity or a "fresher" feel.</li>
+                </ol>
+            </div>
+
+            <div class="word-entry">
+                <h1 class="word">Nyc·to·lu·mi·pho·bi·a</h1>
+                <p class="phonetic">/ˌnɪktoʊˌluːmiˈfoʊbiə/</p>
+                <p class="pronunciation">(nik-toh-loo-mee-FOH-bee-uh)</p>
+                <p class="part-of-speech">noun</p>
+                <ol class="meanings">
+                    <li>An intense aversion to or "fear" of dark mode; the discomfort caused by low-contrast interfaces or light-on-dark text.</li>
+                    <li>The specific anxiety that using a dark screen will cause eye strain or make a device unusable in a bright room.</li>
+                </ol>
+            </div>
+        </section>
+    </main>
+
+    <div class="controls">
+        <div id="light-switch" class="switch">
+            <div class="switch-toggle"></div>
+        </div>
+    </div>
+
+    <script>
+        const body = document.body;
+        const lightSwitch = document.getElementById('light-switch');
+        const darkDefs = document.getElementById('dark-definitions');
+        const lightDefs = document.getElementById('light-definitions');
+        const cursor = document.getElementById('cursor');
+        const cursorGlow = document.getElementById('cursor-glow');
+        const canvas = document.getElementById('spotlight-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Theme Toggle
+        lightSwitch.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            body.classList.toggle('light-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                darkDefs.classList.remove('hidden');
+                lightDefs.classList.add('hidden');
+            } else {
+                darkDefs.classList.add('hidden');
+                lightDefs.classList.remove('hidden');
+            }
+        });
+
+        // Mouse Movement
+        let mouseX = -100;
+        let mouseY = -100;
+        let currentX = -100;
+        let currentY = -100;
+        let points = [];
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Cursor position
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+
+            // Add point for trail
+            if (points.length === 0 || Math.hypot(mouseX - points[points.length-1].x, mouseY - points[points.length-1].y) > 5) {
+                points.push({ x: mouseX, y: mouseY, age: 0 });
+            }
+        });
+
+        // Animation Loop
+        function animate() {
+            // Smooth glow follow
+            let dx = mouseX - currentX;
+            let dy = mouseY - currentY;
+            currentX += dx * 0.15;
+            currentY += dy * 0.15;
+
+            cursorGlow.style.left = currentX + 'px';
+            cursorGlow.style.top = currentY + 'px';
+
+            // Canvas Spotlight Trail
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const isDarkMode = body.classList.contains('dark-mode');
+            const spotlightColor = isDarkMode ? '255, 255, 255' : '0, 0, 0';
+
+            // Update points
+            for (let i = 0; i < points.length; i++) {
+                points[i].age += 1.5; // Faster decay for "quickly"
+                if (points[i].age > 100) {
+                    points.splice(i, 1);
+                    i--;
+                }
+            }
+
+            // Draw fluid trail
+            ctx.save();
+            if (isDarkMode) {
+                ctx.globalCompositeOperation = 'screen';
+            } else {
+                ctx.globalCompositeOperation = 'multiply';
+            }
+
+            // Draw the main spotlight at current position
+            drawSpotlight(mouseX, mouseY, 180, 1, spotlightColor);
+
+            // Draw the trail
+            for (let i = 0; i < points.length; i++) {
+                const point = points[i];
+                const life = 1 - point.age / 100;
+                const opacity = life * 0.4;
+                const size = life * 150;
+                drawSpotlight(point.x, point.y, size, opacity, spotlightColor);
+            }
+            ctx.restore();
+
+            requestAnimationFrame(animate);
+        }
+
+        function drawSpotlight(x, y, radius, opacity, color) {
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+            gradient.addColorStop(0, `rgba(${color}, ${opacity})`);
+            gradient.addColorStop(1, `rgba(${color}, 0)`);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+        }
+
+        animate();
+
+        // Handle clicking on definitions for fun
+        document.querySelectorAll('.word-entry').forEach(entry => {
+            entry.addEventListener('mouseenter', () => {
+                cursorGlow.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            });
+            entry.addEventListener('mouseleave', () => {
+                cursorGlow.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
