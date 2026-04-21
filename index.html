@@ -118,7 +118,7 @@
             transition: width 0.5s ease;
         }
 
-        .word-section:hover .word::after {
+        .word:hover::after {
             width: 100%;
         }
 
@@ -196,21 +196,24 @@
         /* Controls */
         .controls {
             position: fixed;
-            bottom: 40px;
-            right: 40px; /* Right side */
+            top: 50%;
+            right: 40px;
+            transform: translateY(-50%);
             z-index: 100;
         }
 
         .switch {
-            width: 70px;
-            height: 36px;
+            width: 36px;
+            height: 70px;
             background: rgba(128, 128, 128, 0.4);
             border-radius: 18px;
             padding: 4px;
             display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
             align-items: center;
             cursor: pointer !important;
-            border: 2px solid currentColor; /* Contrast with background */
+            border: 2px solid currentColor;
             transition: all 0.3s ease;
         }
 
@@ -222,8 +225,8 @@
             transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .dark-mode .switch-toggle { transform: translateX(0); }
-        .light-mode .switch-toggle { transform: translateX(38px); }
+        .dark-mode .switch-toggle { transform: translateY(0); }
+        .light-mode .switch-toggle { transform: translateY(38px); }
 
         /* Navigation Arrow */
         #nav-arrow {
@@ -359,6 +362,9 @@
                 darkDefs.classList.add('hidden');
                 lightDefs.classList.remove('hidden');
             }
+
+            // Start from the top again
+            window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
         // Click anywhere to toggle, but avoid the switch and arrow
