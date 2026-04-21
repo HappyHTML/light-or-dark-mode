@@ -21,17 +21,19 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none !important; /* Hide real cursor */
+            cursor: none !important;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
             transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            overflow-x: hidden;
         }
 
         body.dark-mode {
@@ -44,7 +46,6 @@
             color: var(--text-light);
         }
 
-        /* Fluid Background Spotlight Effect */
         #spotlight-canvas {
             position: fixed;
             top: 0;
@@ -54,41 +55,40 @@
             pointer-events: none;
             z-index: 1;
             opacity: 0.6;
-            filter: blur(20px); /* Make it fluid */
+            filter: blur(20px);
         }
 
         main {
             position: relative;
             z-index: 2;
-            max-width: 800px;
-            width: 90%;
-            text-align: center;
+            width: 100%;
         }
 
         .definitions {
-            display: flex;
-            flex-direction: column;
-            gap: 4rem;
-            animation: fadeIn var(--transition-speed) ease-out;
+            width: 100%;
         }
 
         .definitions.hidden {
             display: none;
         }
 
+        .word-section {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            scroll-snap-align: start;
+            padding: 2rem;
+        }
+
         .word-entry {
+            max-width: 800px;
             opacity: 0;
             transform: translateY(20px);
             animation: slideUp 1s ease-out forwards;
-        }
-
-        .word-entry:nth-child(2) {
-            animation-delay: 0.3s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         @keyframes slideUp {
@@ -99,8 +99,8 @@
         }
 
         .word {
-            font-size: clamp(2rem, 8vw, 4rem);
-            font-weight: 300;
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-weight: 800; /* Bolder as requested */
             letter-spacing: -0.02em;
             margin-bottom: 0.5rem;
             position: relative;
@@ -113,12 +113,12 @@
             bottom: 0;
             left: 0;
             width: 0;
-            height: 2px;
+            height: 4px;
             background: currentColor;
             transition: width 0.5s ease;
         }
 
-        .word-entry:hover .word::after {
+        .word-section:hover .word::after {
             width: 100%;
         }
 
@@ -174,7 +174,7 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
-            transform: translate(-50%, -50%); /* Center it */
+            transform: translate(-50%, -50%);
             mix-blend-mode: difference;
         }
 
@@ -186,58 +186,75 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 9998;
-            transform: translate(-50%, -50%); /* Center it */
+            transform: translate(-50%, -50%);
             transition: transform 0.15s ease-out;
             box-shadow: 0 0 15px currentColor;
             opacity: 0.5;
             mix-blend-mode: difference;
         }
 
-        /* Light Switch */
+        /* Controls */
         .controls {
             position: fixed;
             bottom: 40px;
+            right: 40px; /* Right side */
             z-index: 100;
         }
 
         .switch {
             width: 70px;
             height: 36px;
-            background: rgba(128, 128, 128, 0.2);
+            background: rgba(128, 128, 128, 0.4);
             border-radius: 18px;
             padding: 4px;
             display: flex;
             align-items: center;
             cursor: pointer !important;
-            border: 1px solid rgba(128, 128, 128, 0.3);
+            border: 2px solid currentColor; /* Contrast with background */
             transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .switch:hover {
-            box-shadow: 0 0 10px currentColor;
         }
 
         .switch-toggle {
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             background: currentColor;
             border-radius: 50%;
             transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .dark-mode .switch-toggle {
-            transform: translateX(0);
+        .dark-mode .switch-toggle { transform: translateX(0); }
+        .light-mode .switch-toggle { transform: translateX(38px); }
+
+        /* Navigation Arrow */
+        #nav-arrow {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            cursor: pointer !important;
+            padding: 20px;
+            transition: all 0.5s ease;
         }
 
-        .light-mode .switch-toggle {
-            transform: translateX(34px);
+        #nav-arrow.at-bottom { bottom: 20px; }
+        #nav-arrow.at-top { top: 20px; }
+
+        .arrow-icon {
+            width: 30px;
+            height: 30px;
+            border-bottom: 2px solid currentColor;
+            border-right: 2px solid currentColor;
+            transform: rotate(45deg);
+            transition: transform 0.5s ease;
         }
 
-        /* Mobile adjustments */
+        #nav-arrow.at-top .arrow-icon {
+            transform: rotate(-135deg);
+        }
+
         @media (max-width: 600px) {
             .word { font-size: 2rem; }
-            .meanings { font-size: 0.9rem; }
+            .controls { right: 20px; bottom: 20px; }
         }
     </style>
 </head>
@@ -246,52 +263,62 @@
     <div id="cursor"></div>
     <div id="cursor-glow"></div>
 
+    <div id="nav-arrow" class="at-bottom">
+        <div class="arrow-icon"></div>
+    </div>
+
     <main>
         <section id="dark-definitions" class="definitions">
-            <div class="word-entry">
-                <h1 class="word">Nyc·to·lu·mi·phil·i·a</h1>
-                <p class="phonetic">/ˌnɪktoʊˌluːmiˈfɪliə/</p>
-                <p class="pronunciation">(nik-toh-loo-mee-FIL-ee-uh)</p>
-                <p class="part-of-speech">noun</p>
-                <ol class="meanings">
-                    <li>A strong preference or "love" for dark mode; the state of finding comfort, focus, or aesthetic satisfaction in dark-themed digital interfaces.</li>
-                    <li>The habit of immediately enabling "dark theme" on every new app or website encountered.</li>
-                </ol>
+            <div class="word-section" id="dark-1">
+                <div class="word-entry">
+                    <h1 class="word">Nyc·to·lu·mi·phil·i·a</h1>
+                    <p class="phonetic">/ˌnɪktoʊˌluːmiˈfɪliə/</p>
+                    <p class="pronunciation">(nik-toh-loo-mee-FIL-ee-uh)</p>
+                    <p class="part-of-speech">noun</p>
+                    <ol class="meanings">
+                        <li>A strong preference or "love" for dark mode; the state of finding comfort, focus, or aesthetic satisfaction in dark-themed digital interfaces.</li>
+                        <li>The habit of immediately enabling "dark theme" on every new app or website encountered.</li>
+                    </ol>
+                </div>
             </div>
-
-            <div class="word-entry">
-                <h1 class="word">Al·ba·lu·mi·pho·bi·a</h1>
-                <p class="phonetic">/ˌælbəˌluːmiˈfoʊbiə/</p>
-                <p class="pronunciation">(al-bə-loo-mee-FOH-bee-uh)</p>
-                <p class="part-of-speech">noun</p>
-                <ol class="meanings">
-                    <li>An intense aversion to or "fear" of light mode on digital screens, or bright digital screens; the physical discomfort caused by high-contrast white backgrounds and extreme display brightness.</li>
-                    <li>The immediate urge to switch a device to dark mode upon encountering a bright user interface.</li>
-                </ol>
+            <div class="word-section" id="dark-2">
+                <div class="word-entry">
+                    <h1 class="word">Al·ba·lu·mi·pho·bi·a</h1>
+                    <p class="phonetic">/ˌælbəˌluːmiˈfoʊbiə/</p>
+                    <p class="pronunciation">(al-bə-loo-mee-FOH-bee-uh)</p>
+                    <p class="part-of-speech">noun</p>
+                    <ol class="meanings">
+                        <li>An intense aversion to or "fear" of light mode on digital screens, or bright digital screens; the physical discomfort caused by high-contrast white backgrounds and extreme display brightness.</li>
+                        <li>The immediate urge to switch a device to dark mode upon encountering a bright user interface.</li>
+                    </ol>
+                </div>
             </div>
         </section>
 
         <section id="light-definitions" class="definitions hidden">
-            <div class="word-entry">
-                <h1 class="word">Al·ba·lu·mi·phil·i·a</h1>
-                <p class="phonetic">/ˌælbəˌluːmiˈfɪliə/</p>
-                <p class="pronunciation">(al-bə-loo-mee-FIL-ee-uh)</p>
-                <p class="part-of-speech">noun</p>
-                <ol class="meanings">
-                    <li>A strong preference for "light mode" on digital devices.</li>
-                    <li>The enjoyment of high-brightness, white-background interfaces, often citing better clarity or a "fresher" feel.</li>
-                </ol>
+            <div class="word-section" id="light-1">
+                <div class="word-entry">
+                    <h1 class="word">Al·ba·lu·mi·phil·i·a</h1>
+                    <p class="phonetic">/ˌælbəˌluːmiˈfɪliə/</p>
+                    <p class="pronunciation">(al-bə-loo-mee-FIL-ee-uh)</p>
+                    <p class="part-of-speech">noun</p>
+                    <ol class="meanings">
+                        <li>A strong preference for "light mode" on digital devices.</li>
+                        <li>The enjoyment of high-brightness, white-background interfaces, often citing better clarity or a "fresher" feel.</li>
+                    </ol>
+                </div>
             </div>
-
-            <div class="word-entry">
-                <h1 class="word">Nyc·to·lu·mi·pho·bi·a</h1>
-                <p class="phonetic">/ˌnɪktoʊˌluːmiˈfoʊbiə/</p>
-                <p class="pronunciation">(nik-toh-loo-mee-FOH-bee-uh)</p>
-                <p class="part-of-speech">noun</p>
-                <ol class="meanings">
-                    <li>An intense aversion to or "fear" of dark mode; the discomfort caused by low-contrast interfaces or light-on-dark text.</li>
-                    <li>The specific anxiety that using a dark screen will cause eye strain or make a device unusable in a bright room.</li>
-                </ol>
+            <div class="word-section" id="light-2">
+                <div class="word-entry">
+                    <h1 class="word">Nyc·to·lu·mi·pho·bi·a</h1>
+                    <p class="phonetic">/ˌnɪktoʊˌluːmiˈfoʊbiə/</p>
+                    <p class="pronunciation">(nik-toh-loo-mee-FOH-bee-uh)</p>
+                    <p class="part-of-speech">noun</p>
+                    <ol class="meanings">
+                        <li>An intense aversion to or "fear" of dark mode; the discomfort caused by low-contrast interfaces or light-on-dark text.</li>
+                        <li>The specific anxiety that using a dark screen will cause eye strain or make a device unusable in a bright room.</li>
+                    </ol>
+                </div>
             </div>
         </section>
     </main>
@@ -310,6 +337,7 @@
         const cursor = document.getElementById('cursor');
         const cursorGlow = document.getElementById('cursor-glow');
         const canvas = document.getElementById('spotlight-canvas');
+        const navArrow = document.getElementById('nav-arrow');
         const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
@@ -319,17 +347,53 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // Theme Toggle
-        lightSwitch.addEventListener('click', () => {
+        function toggleTheme() {
+            const isDark = body.classList.contains('dark-mode');
             body.classList.toggle('dark-mode');
             body.classList.toggle('light-mode');
 
-            if (body.classList.contains('dark-mode')) {
+            if (!isDark) { // Switching to Dark
                 darkDefs.classList.remove('hidden');
                 lightDefs.classList.add('hidden');
-            } else {
+            } else { // Switching to Light
                 darkDefs.classList.add('hidden');
                 lightDefs.classList.remove('hidden');
+            }
+        }
+
+        // Click anywhere to toggle, but avoid the switch and arrow
+        document.addEventListener('click', (e) => {
+            if (!lightSwitch.contains(e.target) && !navArrow.contains(e.target)) {
+                toggleTheme();
+            }
+        });
+
+        lightSwitch.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleTheme();
+        });
+
+        // Navigation Arrow
+        navArrow.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const scrollPos = window.scrollY;
+            const vh = window.innerHeight;
+            if (scrollPos < vh / 2) {
+                window.scrollTo({ top: vh, behavior: 'smooth' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY;
+            const vh = window.innerHeight;
+            if (scrollPos < vh / 2) {
+                navArrow.classList.remove('at-top');
+                navArrow.classList.add('at-bottom');
+            } else {
+                navArrow.classList.remove('at-bottom');
+                navArrow.classList.add('at-top');
             }
         });
 
@@ -343,64 +407,45 @@
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-
-            // Cursor position
             cursor.style.left = mouseX + 'px';
             cursor.style.top = mouseY + 'px';
-
-            // Add point for trail
             if (points.length === 0 || Math.hypot(mouseX - points[points.length-1].x, mouseY - points[points.length-1].y) > 5) {
                 points.push({ x: mouseX, y: mouseY, age: 0 });
             }
         });
 
-        // Animation Loop
         function animate() {
-            // Smooth glow follow
             let dx = mouseX - currentX;
             let dy = mouseY - currentY;
             currentX += dx * 0.15;
             currentY += dy * 0.15;
-
             cursorGlow.style.left = currentX + 'px';
             cursorGlow.style.top = currentY + 'px';
 
-            // Canvas Spotlight Trail
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             const isDarkMode = body.classList.contains('dark-mode');
             const spotlightColor = isDarkMode ? '255, 255, 255' : '0, 0, 0';
 
-            // Update points
             for (let i = 0; i < points.length; i++) {
-                points[i].age += 1.5; // Faster decay for "quickly"
+                points[i].age += 1.5;
                 if (points[i].age > 100) {
                     points.splice(i, 1);
                     i--;
                 }
             }
 
-            // Draw fluid trail
             ctx.save();
-            if (isDarkMode) {
-                ctx.globalCompositeOperation = 'screen';
-            } else {
-                ctx.globalCompositeOperation = 'multiply';
-            }
+            ctx.globalCompositeOperation = isDarkMode ? 'screen' : 'multiply';
+            drawSpotlight(mouseX, mouseY, 90, 1, spotlightColor); // Half size (~90px)
 
-            // Draw the main spotlight at current position
-            drawSpotlight(mouseX, mouseY, 180, 1, spotlightColor);
-
-            // Draw the trail
             for (let i = 0; i < points.length; i++) {
                 const point = points[i];
                 const life = 1 - point.age / 100;
                 const opacity = life * 0.4;
-                const size = life * 150;
+                const size = life * 80;
                 drawSpotlight(point.x, point.y, size, opacity, spotlightColor);
             }
             ctx.restore();
-
             requestAnimationFrame(animate);
         }
 
@@ -414,12 +459,12 @@
 
         animate();
 
-        // Handle clicking on definitions for fun
-        document.querySelectorAll('.word-entry').forEach(entry => {
-            entry.addEventListener('mouseenter', () => {
+        // Cursor scaling
+        document.querySelectorAll('.word-section, #nav-arrow, .switch').forEach(el => {
+            el.addEventListener('mouseenter', () => {
                 cursorGlow.style.transform = 'translate(-50%, -50%) scale(1.5)';
             });
-            entry.addEventListener('mouseleave', () => {
+            el.addEventListener('mouseleave', () => {
                 cursorGlow.style.transform = 'translate(-50%, -50%) scale(1)';
             });
         });
