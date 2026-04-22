@@ -289,7 +289,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s ease;
             backdrop-filter: blur(4px);
         }
 
@@ -297,6 +297,7 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
+            backdrop-filter: blur(0px);
         }
 
         .modal-content {
@@ -308,6 +309,12 @@
             border-radius: 12px;
             box-shadow: 0 0 60px rgba(255, 255, 255, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease;
+        }
+
+        .modal.hidden .modal-content {
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
         }
 
         .modal-intro {
@@ -517,8 +524,6 @@
         // Mouse Movement
         let mouseX = -100;
         let mouseY = -100;
-        let currentX = -100;
-        let currentY = -100;
         let points = [];
 
         document.addEventListener('mousemove', (e) => {
@@ -526,18 +531,14 @@
             mouseY = e.clientY;
             cursor.style.left = mouseX + 'px';
             cursor.style.top = mouseY + 'px';
+            cursorGlow.style.left = mouseX + 'px';
+            cursorGlow.style.top = mouseY + 'px';
             if (points.length === 0 || Math.hypot(mouseX - points[points.length-1].x, mouseY - points[points.length-1].y) > 5) {
                 points.push({ x: mouseX, y: mouseY, age: 0 });
             }
         });
 
         function animate() {
-            let dx = mouseX - currentX;
-            let dy = mouseY - currentY;
-            currentX += dx * 0.15;
-            currentY += dy * 0.15;
-            cursorGlow.style.left = currentX + 'px';
-            cursorGlow.style.top = currentY + 'px';
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isDarkMode = body.classList.contains('dark-mode');
