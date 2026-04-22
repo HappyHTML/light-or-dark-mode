@@ -249,7 +249,7 @@
             position: relative;
             padding-left: 1.5rem;
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            opacity: 0.3;
+            opacity: 0.7;
         }
 
         .meanings li.in-spotlight {
@@ -652,7 +652,7 @@
                     item.classList.add('in-spotlight');
                     // Add some dynamic movement
                     item.style.transform = `translateX(${10 + (power * 10)}px) scale(${1 + (power * 0.05)})`;
-                    item.style.opacity = 0.3 + (power * 0.7);
+                    item.style.opacity = 0.7 + (power * 0.3);
                 } else {
                     item.classList.remove('in-spotlight');
                     item.style.transform = '';
