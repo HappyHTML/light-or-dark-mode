@@ -103,10 +103,39 @@
         }
 
         .word-entry {
-            max-width: 800px;
+            max-width: 850px;
             opacity: 0;
             transform: translateY(20px);
             animation: slideUp 1s ease-out forwards;
+            padding: 3rem;
+            border-radius: 20px;
+            transition: all 0.8s ease;
+            background: rgba(128, 128, 128, 0.03);
+            border: 1px solid rgba(128, 128, 128, 0.1);
+        }
+
+        .dark-mode .word-entry {
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode .word-entry {
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .word-entry:hover {
+            background: rgba(128, 128, 128, 0.05);
+        }
+
+        .dark-mode .word-entry:hover {
+            box-shadow: 0 0 80px rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .light-mode .word-entry:hover {
+            box-shadow: 0 0 80px rgba(0, 0, 0, 0.25);
+            border-color: rgba(0, 0, 0, 0.2);
         }
 
         @keyframes slideUp {
@@ -117,63 +146,69 @@
         }
 
         .word {
-            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-size: clamp(2.5rem, 8.5vw, 5rem);
             font-weight: 800;
             letter-spacing: -0.02em;
             margin-bottom: 0.5rem;
             position: relative;
             display: inline-block;
+            white-space: nowrap;
         }
 
         .syllable {
             position: relative;
             display: inline-block;
             transition: all 0.3s ease;
-            padding: 0 1px;
-            border-radius: 3px;
+            padding: 0 2px;
+            border-radius: 4px;
         }
 
         .syllable.highlight-root {
-            box-shadow: 0 0 12px 2px rgba(255, 255, 255, 0.5);
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 15px 4px rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: #fff !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         .light-mode .syllable.highlight-root {
-            box-shadow: 0 0 12px 2px rgba(0, 0, 0, 0.3);
-            background: rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(0, 0, 0, 0.5);
+            color: #000 !important;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
         .syllable::before {
             content: attr(data-tooltip);
             position: absolute;
-            bottom: 110%;
+            bottom: 125%;
             left: 50%;
             transform: translateX(-50%) translateY(10px);
-            background: var(--bg-dark);
-            color: var(--text-dark);
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 400;
+            background: rgba(10, 10, 10, 0.92);
+            color: #fff;
+            padding: 0.8rem 1.4rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
             white-space: nowrap;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
             font-family: 'Inter', sans-serif;
             letter-spacing: normal;
             z-index: 20000;
+            backdrop-filter: blur(12px);
         }
 
         .light-mode .syllable::before {
-            background: var(--bg-light);
-            color: var(--text-light);
-            border: 1px solid rgba(0,0,0,0.1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: rgba(250, 250, 250, 0.92);
+            color: #000;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
         }
 
         .syllable:hover::before {
@@ -461,9 +496,7 @@
         <section id="dark-definitions" class="definitions">
             <div class="word-section" id="dark-1">
                 <div class="word-entry">
-                    <h1 class="word">
-                        <span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">Al</span>·<span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">ba</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">pho</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">bi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">a</span>
-                    </h1>
+                    <h1 class="word"><span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">Al</span>·<span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">ba</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">pho</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">bi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">a</span></h1>
                     <p class="phonetic">/ˌælbəˌluːmiˈfoʊbiə/</p>
                     <p class="pronunciation">(al-bə-loo-mee-FOH-bee-uh)</p>
                     <p class="part-of-speech">noun</p>
@@ -475,9 +508,7 @@
             </div>
             <div class="word-section" id="dark-2">
                 <div class="word-entry">
-                    <h1 class="word">
-                        <span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">Nyc</span>·<span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">to</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">phil</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">i</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">a</span>
-                    </h1>
+                    <h1 class="word"><span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">Nyc</span>·<span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">to</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">phil</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">i</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">a</span></h1>
                     <p class="phonetic">/ˌnɪktoʊˌluːmiˈfɪliə/</p>
                     <p class="pronunciation">(nik-toh-loo-mee-FIL-ee-uh)</p>
                     <p class="part-of-speech">noun</p>
@@ -492,9 +523,7 @@
         <section id="light-definitions" class="definitions hidden">
             <div class="word-section" id="light-1">
                 <div class="word-entry">
-                    <h1 class="word">
-                        <span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">Nyc</span>·<span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">to</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">pho</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">bi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">a</span>
-                    </h1>
+                    <h1 class="word"><span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">Nyc</span>·<span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">to</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">pho</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">bi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">a</span></h1>
                     <p class="phonetic">/ˌnɪktoʊˌluːmiˈfoʊbiə/</p>
                     <p class="pronunciation">(nik-toh-loo-mee-FOH-bee-uh)</p>
                     <p class="part-of-speech">noun</p>
@@ -506,9 +535,7 @@
             </div>
             <div class="word-section" id="light-2">
                 <div class="word-entry">
-                    <h1 class="word">
-                        <span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">Al</span>·<span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">ba</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">phil</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">i</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">a</span>
-                    </h1>
+                    <h1 class="word"><span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">Al</span>·<span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">ba</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">phil</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">i</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">a</span></h1>
                     <p class="phonetic">/ˌælbəˌluːmiˈfɪliə/</p>
                     <p class="pronunciation">(al-bə-loo-mee-FIL-ee-uh)</p>
                     <p class="part-of-speech">noun</p>
