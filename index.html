@@ -21,7 +21,17 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none !important;
+            cursor: none;
+        }
+
+        body.modal-active,
+        body.modal-active * {
+            cursor: auto !important;
+        }
+
+        body.modal-active #cursor,
+        body.modal-active #cursor-glow {
+            display: none;
         }
 
         html {
@@ -277,13 +287,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--bg-dark);
+            background-color: rgba(10, 10, 10, 0.4); /* Transparent to see background */
             color: var(--text-dark);
             z-index: 10000;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: opacity 0.5s ease, visibility 0.5s ease;
+            backdrop-filter: blur(4px);
         }
 
         .modal.hidden {
@@ -297,6 +308,10 @@
             padding: 40px;
             text-align: center;
             line-height: 1.8;
+            background: var(--bg-dark);
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .modal-intro {
@@ -330,7 +345,7 @@
         }
     </style>
 </head>
-<body class="dark-mode">
+<body class="dark-mode modal-active">
     <div id="intro-modal" class="modal">
         <div class="modal-content">
             <p class="modal-intro">These are not yet official words, but I hope to coin them.</p>
@@ -453,6 +468,7 @@
         function dismissModal() {
             if (isModalActive) {
                 introModal.classList.add('hidden');
+                body.classList.remove('modal-active');
                 isModalActive = false;
                 return true;
             }
