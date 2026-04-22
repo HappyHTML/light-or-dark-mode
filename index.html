@@ -124,17 +124,15 @@
             letter-spacing: -0.02em;
             margin-bottom: 0.5rem;
             position: relative;
-            display: flex;
+            display: inline-flex;
             justify-content: center;
             flex-wrap: nowrap;
-            width: 100%;
         }
 
         .syllable {
             position: relative;
             display: inline-block;
             transition: all 0.4s ease;
-            padding: 0 1px;
             border-radius: 4px;
             opacity: 1;
         }
@@ -203,16 +201,17 @@
         .word::after {
             content: "";
             position: absolute;
-            bottom: 0;
-            left: 0;
+            bottom: -2px;
+            left: 50%;
             width: 0;
-            height: 4px;
+            height: 2px;
             background: currentColor;
-            transition: width 0.5s ease;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .word:hover::after {
             width: 100%;
+            left: 0;
         }
 
         .phonetic {
@@ -249,13 +248,15 @@
             line-height: 1.6;
             position: relative;
             padding-left: 1.5rem;
-            transition: all 0.4s ease;
-            opacity: 0.5;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0.3;
         }
 
         .meanings li.in-spotlight {
             opacity: 1;
-            transform: translateX(5px);
+            transform: translateX(15px) scale(1.05);
+            text-shadow: 0 0 15px currentColor;
+            z-index: 10;
         }
 
         .meanings li::before {
@@ -571,7 +572,7 @@
             }
 
             // Start from the top again
-            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.scrollTo({ top: 0, behavior: 'auto' });
         }
 
         let isModalActive = true;
@@ -638,19 +639,24 @@
 
         function updateSpotlightInteractions() {
             const items = document.querySelectorAll('.meanings li');
-            const spotlightRadius = 150; // Increased radius for interaction check
+            const spotlightRadius = 250;
 
             items.forEach(item => {
                 const rect = item.getBoundingClientRect();
-                const itemX = rect.left + rect.width / 2;
-                const itemY = rect.top + rect.height / 2;
-
-                const distance = Math.hypot(mouseX - itemX, mouseY - itemY);
+                const closestX = Math.max(rect.left, Math.min(mouseX, rect.right));
+                const closestY = Math.max(rect.top, Math.min(mouseY, rect.bottom));
+                const distance = Math.hypot(mouseX - closestX, mouseY - closestY);
 
                 if (distance < spotlightRadius) {
+                    const power = 1 - (distance / spotlightRadius);
                     item.classList.add('in-spotlight');
+                    // Add some dynamic movement
+                    item.style.transform = `translateX(${10 + (power * 10)}px) scale(${1 + (power * 0.05)})`;
+                    item.style.opacity = 0.3 + (power * 0.7);
                 } else {
                     item.classList.remove('in-spotlight');
+                    item.style.transform = '';
+                    item.style.opacity = '';
                 }
             });
         }
