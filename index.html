@@ -24,6 +24,15 @@
             cursor: none !important;
         }
 
+        @media (max-width: 768px) {
+            * {
+                cursor: auto !important;
+            }
+            #cursor, #cursor-glow, #spotlight-canvas {
+                display: none !important;
+            }
+        }
+
         body.modal-active main,
         body.modal-active .controls,
         body.modal-active #nav-arrow {
@@ -192,7 +201,8 @@
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
         }
 
-        .syllable:hover::before {
+        .syllable:hover::before,
+        .syllable.mobile-active::before {
             opacity: 1;
             visibility: visible;
             transform: translateX(-50%) translateY(0);
@@ -375,9 +385,46 @@
             transform: rotate(-135deg);
         }
 
-        @media (max-width: 600px) {
-            .word { font-size: 2rem; }
-            .controls { right: 20px; bottom: 20px; }
+        @media (max-width: 768px) {
+            .word { font-size: clamp(1.8rem, 8vw, 3rem); }
+            .word-section { padding: 1rem; }
+            .word-entry { padding: 1.5rem; }
+            .controls { right: 20px; top: auto; bottom: 20px; transform: none; z-index: 30001; }
+            #progress-container { left: 15px; height: 100px; }
+            .meanings { padding: 0; }
+            .meanings li { opacity: 1 !important; transform: none !important; }
+            .syllable::before {
+                position: fixed;
+                top: auto;
+                bottom: 20px;
+                left: 50%;
+                width: calc(100% - 40px);
+                max-width: 400px;
+                transform: translateX(-50%) translateY(120%);
+                font-size: 1rem;
+                padding: 1.2rem;
+                white-space: normal;
+                line-height: 1.4;
+                text-align: center;
+                box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+                border: 1px solid rgba(255,255,255,0.2);
+                z-index: 30000;
+                border-radius: 16px;
+                background: rgba(15, 15, 15, 0.95);
+                backdrop-filter: blur(20px);
+                transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            }
+            .light-mode .syllable::before {
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+                border: 1px solid rgba(0,0,0,0.1);
+            }
+            .syllable:hover::before,
+            .syllable.mobile-active::before {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+            .word-section { overflow: visible; }
         }
 
         /* Modal Styles */
@@ -459,8 +506,7 @@
             <div class="modal-instructions">
                 <p>Scroll to explore related terms.</p>
                 <p>Hover over syllables to discover etymologies and shared roots.</p>
-                <p>Observe how definitions awaken as you move through the shadows.</p>
-                <p>Click anywhere or use the switch to toggle your preference.</p>
+                <p>Click anywhere or use the switch to toggle to the opposite word set.</p>
             </div>
             <p class="modal-continue">[Click anywhere to continue]</p>
         </div>
@@ -552,6 +598,16 @@
         const navArrow = document.getElementById('nav-arrow');
         const progressBar = document.getElementById('progress-bar');
         const ctx = canvas.getContext('2d');
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+        if (isMobile) {
+            const instr = document.querySelector('.modal-instructions');
+            instr.innerHTML = `
+                <p>Scroll to explore related terms.</p>
+                <p>Tap syllables to discover etymologies and shared roots.</p>
+                <p>Tap anywhere or use the switch to toggle to the opposite word set.</p>
+            `;
+        }
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -640,6 +696,7 @@
         });
 
         function updateSpotlightInteractions() {
+            if (isMobile) return;
             const items = document.querySelectorAll('.meanings li');
             const spotlightRadius = 250;
 
@@ -669,6 +726,7 @@
         let points = [];
 
         document.addEventListener('mousemove', (e) => {
+            if (isMobile) return;
             mouseX = e.clientX;
             mouseY = e.clientY;
             cursor.style.left = mouseX + 'px';
@@ -682,7 +740,7 @@
         });
 
         function animate() {
-
+            if (isMobile) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isDarkMode = body.classList.contains('dark-mode');
             const spotlightColor = isDarkMode ? '255, 255, 255' : '0, 0, 0';
@@ -722,18 +780,46 @@
 
         // Syllable root highlighting
         document.querySelectorAll('.syllable').forEach(syllable => {
-            syllable.addEventListener('mouseenter', () => {
+            const toggleSyllable = (show) => {
                 const rootId = syllable.getAttribute('data-root-id');
                 document.querySelectorAll(`.syllable[data-root-id="${rootId}"]`).forEach(el => {
-                    el.classList.add('highlight-root');
+                    if (show) el.classList.add('highlight-root');
+                    else el.classList.remove('highlight-root');
                 });
-            });
-            syllable.addEventListener('mouseleave', () => {
-                document.querySelectorAll('.syllable').forEach(el => {
-                    el.classList.remove('highlight-root');
+            };
+
+            syllable.addEventListener('mouseenter', () => !isMobile && toggleSyllable(true));
+            syllable.addEventListener('mouseleave', () => !isMobile && toggleSyllable(false));
+
+            if (isMobile) {
+                syllable.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isActive = syllable.classList.contains('mobile-active');
+
+                    // Clear all others
+                    document.querySelectorAll('.syllable').forEach(s => {
+                        s.classList.remove('mobile-active');
+                        const rId = s.getAttribute('data-root-id');
+                        document.querySelectorAll(`.syllable[data-root-id="${rId}"]`).forEach(el => el.classList.remove('highlight-root'));
+                    });
+
+                    if (!isActive) {
+                        syllable.classList.add('mobile-active');
+                        toggleSyllable(true);
+                    }
                 });
-            });
+            }
         });
+
+        // Clear mobile tooltips when clicking away
+        if (isMobile) {
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.syllable').forEach(s => {
+                    s.classList.remove('mobile-active');
+                    s.classList.remove('highlight-root');
+                });
+            });
+        }
 
         // Cursor scaling
         document.querySelectorAll('.word-section, #nav-arrow, .switch').forEach(el => {
