@@ -108,34 +108,6 @@
             transform: translateY(20px);
             animation: slideUp 1s ease-out forwards;
             padding: 3rem;
-            border-radius: 20px;
-            transition: all 0.8s ease;
-            background: rgba(128, 128, 128, 0.03);
-            border: 1px solid rgba(128, 128, 128, 0.1);
-        }
-
-        .dark-mode .word-entry {
-            box-shadow: 0 0 50px rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .light-mode .word-entry {
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.12);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .word-entry:hover {
-            background: rgba(128, 128, 128, 0.05);
-        }
-
-        .dark-mode .word-entry:hover {
-            box-shadow: 0 0 80px rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.25);
-        }
-
-        .light-mode .word-entry:hover {
-            box-shadow: 0 0 80px rgba(0, 0, 0, 0.25);
-            border-color: rgba(0, 0, 0, 0.2);
         }
 
         @keyframes slideUp {
@@ -146,7 +118,7 @@
         }
 
         .word {
-            font-size: clamp(2.5rem, 8.5vw, 5rem);
+            font-size: clamp(2rem, 6.2vw, 5rem);
             font-weight: 800;
             letter-spacing: -0.02em;
             margin-bottom: 0.5rem;
@@ -164,19 +136,11 @@
         }
 
         .syllable.highlight-root {
-            box-shadow: 0 0 15px 4px rgba(255, 255, 255, 0.7);
-            background: rgba(255, 255, 255, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.6);
             color: #fff !important;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         .light-mode .syllable.highlight-root {
-            box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.4);
-            background: rgba(0, 0, 0, 0.12);
-            border: 1px solid rgba(0, 0, 0, 0.5);
             color: #000 !important;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
         .syllable::before {
