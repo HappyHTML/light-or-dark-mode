@@ -269,9 +269,79 @@
             .word { font-size: 2rem; }
             .controls { right: 20px; bottom: 20px; }
         }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .modal-intro {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .modal-instructions {
+            margin-bottom: 3rem;
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+
+        .modal-instructions p {
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-continue {
+            font-family: monospace;
+            letter-spacing: 0.1em;
+            font-size: 0.8rem;
+            opacity: 0.5;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
     </style>
 </head>
 <body class="dark-mode">
+    <div id="intro-modal" class="modal">
+        <div class="modal-content">
+            <p class="modal-intro">These are not yet official words, but I hope to coin them.</p>
+            <div class="modal-instructions">
+                <p>Scroll to explore related terms.</p>
+                <p>Click anywhere or use the switch to toggle between light and dark preferences.</p>
+            </div>
+            <p class="modal-continue">[Click anywhere to continue]</p>
+        </div>
+    </div>
+
     <canvas id="spotlight-canvas"></canvas>
     <div id="cursor"></div>
     <div id="cursor-glow"></div>
@@ -344,6 +414,7 @@
 
     <script>
         const body = document.body;
+        const introModal = document.getElementById('intro-modal');
         const lightSwitch = document.getElementById('light-switch');
         const darkDefs = document.getElementById('dark-definitions');
         const lightDefs = document.getElementById('light-definitions');
@@ -377,8 +448,23 @@
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
+        let isModalActive = true;
+
+        function dismissModal() {
+            if (isModalActive) {
+                introModal.classList.add('hidden');
+                isModalActive = false;
+                return true;
+            }
+            return false;
+        }
+
         // Click anywhere to toggle, but avoid the switch and arrow
         document.addEventListener('click', (e) => {
+            if (dismissModal()) {
+                return; // Prevent theme toggle on first click
+            }
+
             if (!lightSwitch.contains(e.target) && !navArrow.contains(e.target)) {
                 toggleTheme();
             }
@@ -386,6 +472,9 @@
 
         lightSwitch.addEventListener('click', (e) => {
             e.stopPropagation();
+            if (dismissModal()) {
+                return;
+            }
             toggleTheme();
         });
 
