@@ -118,11 +118,58 @@
 
         .word {
             font-size: clamp(2.5rem, 10vw, 5rem);
-            font-weight: 800; /* Bolder as requested */
+            font-weight: 800;
             letter-spacing: -0.02em;
             margin-bottom: 0.5rem;
             position: relative;
             display: inline-block;
+        }
+
+        .syllable {
+            position: relative;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+
+        .syllable:hover {
+            color: #888;
+        }
+
+        .syllable::before {
+            content: attr(data-root);
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: normal;
+            z-index: 20000;
+        }
+
+        .light-mode .syllable::before {
+            background: var(--bg-light);
+            color: var(--text-light);
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .syllable:hover::before {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
         }
 
         .word::after {
@@ -174,6 +221,13 @@
             line-height: 1.6;
             position: relative;
             padding-left: 1.5rem;
+            transition: all 0.4s ease;
+            opacity: 0.5;
+        }
+
+        .meanings li.in-spotlight {
+            opacity: 1;
+            transform: translateX(5px);
         }
 
         .meanings li::before {
@@ -257,6 +311,27 @@
 
         #nav-arrow.at-bottom { bottom: 20px; }
         #nav-arrow.at-top { top: 20px; }
+
+        /* Scroll Progress */
+        #progress-container {
+            position: fixed;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 150px;
+            background: rgba(128, 128, 128, 0.2);
+            z-index: 100;
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            width: 100%;
+            height: 0%;
+            background: currentColor;
+            transition: height 0.1s linear;
+        }
 
         .arrow-icon {
             width: 30px;
@@ -368,11 +443,17 @@
         <div class="arrow-icon"></div>
     </div>
 
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
     <main>
         <section id="dark-definitions" class="definitions">
             <div class="word-section" id="dark-1">
                 <div class="word-entry">
-                    <h1 class="word">Al·ba·lu·mi·pho·bi·a</h1>
+                    <h1 class="word">
+                        <span class="syllable" data-root="albus (white)">Al</span>·<span class="syllable" data-root="lumen (light)">ba</span>·<span class="syllable" data-root="lumen (light)">lu</span>·<span class="syllable" data-root="lumen (light)">mi</span>·<span class="syllable" data-root="phobos (fear)">pho</span>·<span class="syllable" data-root="phobos (fear)">bi</span>·<span class="syllable" data-root="phobos (fear)">a</span>
+                    </h1>
                     <p class="phonetic">/ˌælbəˌluːmiˈfoʊbiə/</p>
                     <p class="pronunciation">(al-bə-loo-mee-FOH-bee-uh)</p>
                     <p class="part-of-speech">noun</p>
@@ -384,7 +465,9 @@
             </div>
             <div class="word-section" id="dark-2">
                 <div class="word-entry">
-                    <h1 class="word">Nyc·to·lu·mi·phil·i·a</h1>
+                    <h1 class="word">
+                        <span class="syllable" data-root="nyx (night)">Nyc</span>·<span class="syllable" data-root="nyx (night)">to</span>·<span class="syllable" data-root="lumen (light)">lu</span>·<span class="syllable" data-root="lumen (light)">mi</span>·<span class="syllable" data-root="philos (love)">phil</span>·<span class="syllable" data-root="philos (love)">i</span>·<span class="syllable" data-root="philos (love)">a</span>
+                    </h1>
                     <p class="phonetic">/ˌnɪktoʊˌluːmiˈfɪliə/</p>
                     <p class="pronunciation">(nik-toh-loo-mee-FIL-ee-uh)</p>
                     <p class="part-of-speech">noun</p>
@@ -399,7 +482,9 @@
         <section id="light-definitions" class="definitions hidden">
             <div class="word-section" id="light-1">
                 <div class="word-entry">
-                    <h1 class="word">Nyc·to·lu·mi·pho·bi·a</h1>
+                    <h1 class="word">
+                        <span class="syllable" data-root="nyx (night)">Nyc</span>·<span class="syllable" data-root="nyx (night)">to</span>·<span class="syllable" data-root="lumen (light)">lu</span>·<span class="syllable" data-root="lumen (light)">mi</span>·<span class="syllable" data-root="phobos (fear)">pho</span>·<span class="syllable" data-root="phobos (fear)">bi</span>·<span class="syllable" data-root="phobos (fear)">a</span>
+                    </h1>
                     <p class="phonetic">/ˌnɪktoʊˌluːmiˈfoʊbiə/</p>
                     <p class="pronunciation">(nik-toh-loo-mee-FOH-bee-uh)</p>
                     <p class="part-of-speech">noun</p>
@@ -411,7 +496,9 @@
             </div>
             <div class="word-section" id="light-2">
                 <div class="word-entry">
-                    <h1 class="word">Al·ba·lu·mi·phil·i·a</h1>
+                    <h1 class="word">
+                        <span class="syllable" data-root="albus (white)">Al</span>·<span class="syllable" data-root="lumen (light)">ba</span>·<span class="syllable" data-root="lumen (light)">lu</span>·<span class="syllable" data-root="lumen (light)">mi</span>·<span class="syllable" data-root="philos (love)">phil</span>·<span class="syllable" data-root="philos (love)">i</span>·<span class="syllable" data-root="philos (love)">a</span>
+                    </h1>
                     <p class="phonetic">/ˌælbəˌluːmiˈfɪliə/</p>
                     <p class="pronunciation">(al-bə-loo-mee-FIL-ee-uh)</p>
                     <p class="part-of-speech">noun</p>
@@ -440,6 +527,7 @@
         const cursorGlow = document.getElementById('cursor-glow');
         const canvas = document.getElementById('spotlight-canvas');
         const navArrow = document.getElementById('nav-arrow');
+        const progressBar = document.getElementById('progress-bar');
         const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
@@ -512,6 +600,10 @@
         window.addEventListener('scroll', () => {
             const scrollPos = window.scrollY;
             const vh = window.innerHeight;
+            const totalHeight = document.documentElement.scrollHeight - vh;
+            const progress = (scrollPos / totalHeight) * 100;
+            progressBar.style.height = progress + '%';
+
             if (scrollPos < vh / 2) {
                 navArrow.classList.remove('at-top');
                 navArrow.classList.add('at-bottom');
@@ -519,7 +611,29 @@
                 navArrow.classList.remove('at-bottom');
                 navArrow.classList.add('at-top');
             }
+
+            // Update spotlight interactions
+            updateSpotlightInteractions();
         });
+
+        function updateSpotlightInteractions() {
+            const items = document.querySelectorAll('.meanings li');
+            const spotlightRadius = 150; // Increased radius for interaction check
+
+            items.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                const itemX = rect.left + rect.width / 2;
+                const itemY = rect.top + rect.height / 2;
+
+                const distance = Math.hypot(mouseX - itemX, mouseY - itemY);
+
+                if (distance < spotlightRadius) {
+                    item.classList.add('in-spotlight');
+                } else {
+                    item.classList.remove('in-spotlight');
+                }
+            });
+        }
 
         // Mouse Movement
         let mouseX = -100;
@@ -536,6 +650,7 @@
             if (points.length === 0 || Math.hypot(mouseX - points[points.length-1].x, mouseY - points[points.length-1].y) > 5) {
                 points.push({ x: mouseX, y: mouseY, age: 0 });
             }
+            updateSpotlightInteractions();
         });
 
         function animate() {
