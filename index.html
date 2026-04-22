@@ -128,15 +128,25 @@
         .syllable {
             position: relative;
             display: inline-block;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            padding: 0 1px;
+            border-radius: 3px;
         }
 
-        .syllable:hover {
-            color: #888;
+        .syllable.highlight-root {
+            box-shadow: 0 0 12px 2px rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .light-mode .syllable.highlight-root {
+            box-shadow: 0 0 12px 2px rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.3);
         }
 
         .syllable::before {
-            content: attr(data-root);
+            content: attr(data-tooltip);
             position: absolute;
             bottom: 110%;
             left: 50%;
@@ -145,7 +155,7 @@
             color: var(--text-dark);
             padding: 0.4rem 0.8rem;
             border-radius: 4px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 400;
             white-space: nowrap;
             opacity: 0;
@@ -452,7 +462,7 @@
             <div class="word-section" id="dark-1">
                 <div class="word-entry">
                     <h1 class="word">
-                        <span class="syllable" data-root="albus (white)">Al</span>·<span class="syllable" data-root="lumen (light)">ba</span>·<span class="syllable" data-root="lumen (light)">lu</span>·<span class="syllable" data-root="lumen (light)">mi</span>·<span class="syllable" data-root="phobos (fear)">pho</span>·<span class="syllable" data-root="phobos (fear)">bi</span>·<span class="syllable" data-root="phobos (fear)">a</span>
+                        <span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">Al</span>·<span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">ba</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">pho</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">bi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">a</span>
                     </h1>
                     <p class="phonetic">/ˌælbəˌluːmiˈfoʊbiə/</p>
                     <p class="pronunciation">(al-bə-loo-mee-FOH-bee-uh)</p>
@@ -466,7 +476,7 @@
             <div class="word-section" id="dark-2">
                 <div class="word-entry">
                     <h1 class="word">
-                        <span class="syllable" data-root="nyx (night)">Nyc</span>·<span class="syllable" data-root="nyx (night)">to</span>·<span class="syllable" data-root="lumen (light)">lu</span>·<span class="syllable" data-root="lumen (light)">mi</span>·<span class="syllable" data-root="philos (love)">phil</span>·<span class="syllable" data-root="philos (love)">i</span>·<span class="syllable" data-root="philos (love)">a</span>
+                        <span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">Nyc</span>·<span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">to</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">phil</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">i</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">a</span>
                     </h1>
                     <p class="phonetic">/ˌnɪktoʊˌluːmiˈfɪliə/</p>
                     <p class="pronunciation">(nik-toh-loo-mee-FIL-ee-uh)</p>
@@ -483,7 +493,7 @@
             <div class="word-section" id="light-1">
                 <div class="word-entry">
                     <h1 class="word">
-                        <span class="syllable" data-root="nyx (night)">Nyc</span>·<span class="syllable" data-root="nyx (night)">to</span>·<span class="syllable" data-root="lumen (light)">lu</span>·<span class="syllable" data-root="lumen (light)">mi</span>·<span class="syllable" data-root="phobos (fear)">pho</span>·<span class="syllable" data-root="phobos (fear)">bi</span>·<span class="syllable" data-root="phobos (fear)">a</span>
+                        <span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">Nyc</span>·<span class="syllable" data-root-id="night" data-tooltip="'Nycto-' from Greek nyx for night">to</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">pho</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">bi</span>·<span class="syllable" data-root-id="fear" data-tooltip="'-phobia' from Greek phobos for fear">a</span>
                     </h1>
                     <p class="phonetic">/ˌnɪktoʊˌluːmiˈfoʊbiə/</p>
                     <p class="pronunciation">(nik-toh-loo-mee-FOH-bee-uh)</p>
@@ -497,7 +507,7 @@
             <div class="word-section" id="light-2">
                 <div class="word-entry">
                     <h1 class="word">
-                        <span class="syllable" data-root="albus (white)">Al</span>·<span class="syllable" data-root="lumen (light)">ba</span>·<span class="syllable" data-root="lumen (light)">lu</span>·<span class="syllable" data-root="lumen (light)">mi</span>·<span class="syllable" data-root="philos (love)">phil</span>·<span class="syllable" data-root="philos (love)">i</span>·<span class="syllable" data-root="philos (love)">a</span>
+                        <span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">Al</span>·<span class="syllable" data-root-id="white" data-tooltip="'Alba-' from Latin albus for white">ba</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">lu</span>·<span class="syllable" data-root-id="light" data-tooltip="'Lumi-' from Latin lumen for light">mi</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">phil</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">i</span>·<span class="syllable" data-root-id="love" data-tooltip="'-philia' from Greek philos for love">a</span>
                     </h1>
                     <p class="phonetic">/ˌælbəˌluːmiˈfɪliə/</p>
                     <p class="pronunciation">(al-bə-loo-mee-FIL-ee-uh)</p>
@@ -691,6 +701,21 @@
         }
 
         animate();
+
+        // Syllable root highlighting
+        document.querySelectorAll('.syllable').forEach(syllable => {
+            syllable.addEventListener('mouseenter', () => {
+                const rootId = syllable.getAttribute('data-root-id');
+                document.querySelectorAll(`.syllable[data-root-id="${rootId}"]`).forEach(el => {
+                    el.classList.add('highlight-root');
+                });
+            });
+            syllable.addEventListener('mouseleave', () => {
+                document.querySelectorAll('.syllable').forEach(el => {
+                    el.classList.remove('highlight-root');
+                });
+            });
+        });
 
         // Cursor scaling
         document.querySelectorAll('.word-section, #nav-arrow, .switch').forEach(el => {
