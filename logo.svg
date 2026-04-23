@@ -1,9 +1,59 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="64" fill="none"/>
-  <!-- The main circle -->
-  <path d="M32 4C16.536 4 4 16.536 4 32C4 47.464 16.536 60 32 60V4Z" fill="black"/>
-  <path d="M32 4V60C47.464 60 60 47.464 60 32C60 16.536 47.464 4 32 4Z" fill="white" stroke="black" stroke-width="2"/>
-  <!-- The contrasting centers -->
-  <circle cx="21" cy="32" r="5" fill="white"/>
-  <circle cx="43" cy="32" r="5" fill="black"/>
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Multi-layered corona gradients -->
+    <radialGradient id="innerCorona" cx="50%" cy="50%" r="50%">
+      <stop offset="60%" stop-color="white" stop-opacity="1"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="outerCorona" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="coronaBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" />
+    </filter>
+    <filter id="rayBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" />
+    </filter>
+  </defs>
+
+  <!-- Background Rays (Layered for detail) -->
+  <g filter="url(#rayBlur)" opacity="0.4">
+    <!-- Primary rays -->
+    <path d="M128 20 L135 128 L121 128 Z" fill="white"/>
+    <path d="M128 236 L121 128 L135 128 Z" fill="white"/>
+    <path d="M20 128 L128 121 L128 135 Z" fill="white"/>
+    <path d="M236 128 L128 135 L128 121 Z" fill="white"/>
+
+    <!-- Secondary rays -->
+    <path d="M50 50 L128 128 L115 115 Z" fill="white"/>
+    <path d="M206 206 L128 128 L141 141 Z" fill="white"/>
+    <path d="M50 206 L128 128 L115 141 Z" fill="white"/>
+    <path d="M206 50 L128 128 L141 115 Z" fill="white"/>
+
+    <!-- Subtle atmospheric rays -->
+    <path d="M128 0 L140 128 L116 128 Z" fill="white" opacity="0.5"/>
+    <path d="M128 256 L116 128 L140 128 Z" fill="white" opacity="0.5"/>
+    <path d="M0 128 L128 116 L128 140 Z" fill="white" opacity="0.5"/>
+    <path d="M256 128 L128 140 L128 116 Z" fill="white" opacity="0.5"/>
+
+    <!-- Random organic ray-like streaks -->
+    <path d="M80 30 L128 128 L95 40 Z" fill="white" opacity="0.3"/>
+    <path d="M176 30 L128 128 L161 40 Z" fill="white" opacity="0.3"/>
+    <path d="M30 80 L128 128 L40 95 Z" fill="white" opacity="0.3"/>
+    <path d="M30 176 L128 128 L40 161 Z" fill="white" opacity="0.3"/>
+  </g>
+
+  <!-- Diffuse Atmosphere -->
+  <circle cx="128" cy="128" r="90" fill="url(#outerCorona)" filter="url(#coronaBlur)" opacity="0.5"/>
+
+  <!-- Intense Inner Corona -->
+  <circle cx="128" cy="128" r="68" fill="url(#innerCorona)" filter="url(#coronaBlur)"/>
+
+  <!-- "Diamond Ring" style highlight -->
+  <circle cx="170" cy="86" r="15" fill="white" filter="url(#coronaBlur)" opacity="0.8"/>
+
+  <!-- The Moon -->
+  <circle cx="128" cy="128" r="64" fill="black"/>
 </svg>
